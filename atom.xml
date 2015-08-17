@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Tristan's Tech Blog</title>
+ <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
+ <link href="http://www.tristanpollitt.com/"/>
+ <updated>2015-08-15T22:46:23+01:00</updated>
+ <id>http://www.tristanpollitt.com</id>
+ <author>
+   <name>Tristan Pollitt</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Building a Sous-Vide Cooker Using Arduino</title>
+   <link href="http://www.tristanpollitt.com/2015/08/15/sous-vide/"/>
+   <updated>2015-08-15T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/08/15/sous-vide</id>
+   <content type="html">&lt;p&gt;Sous-vide is a method for cooking food in a very precise manner to achieve consistently perfect results. The food is vacuum-sealed in a plastic bag and submerged in a temperature-controlled bath of water for a pre-determined amount of time, after which it is either ready to serve, or as in the case of steak, quickly seared in a hot cast-iron pan before serving. The result is food cooked to perfection, steak that&amp;#39;s just as rare as you want it and slices like butter, or eggs poached to exactly the right consistency (at least in theory - in practice it can get a bit messy).&lt;/p&gt;
+
+&lt;p&gt;Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed &lt;a href=&quot;http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS&quot;&gt;this instructable&lt;/a&gt; for the most part, using the same temperature probe and LED display, but with much simplified code. &lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how I did it.&lt;/p&gt;
+
+&lt;h2&gt;Step 1: Components&lt;/h2&gt;
+
+&lt;h2&gt;Step 2: Wiring it together&lt;/h2&gt;
+
+&lt;h2&gt;Step 3: Code&lt;/h2&gt;
+
+&lt;h2&gt;Step 4: Safety and Testing&lt;/h2&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Building a Nest Thermostat With Arduino Part 1 - Control</title>
+   <link href="http://www.tristanpollitt.com/2015/08/15/nest-thermostat/"/>
+   <updated>2015-08-15T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/08/15/nest-thermostat</id>
+   <content type="html">&lt;p&gt;The idea of a fully automated smart-home is an appealing one, and having a computer take care of repetitive tasks makes sense not only because it lets you be lazy, but also because a computer can make smart decisions based on data that you might not think or care about. One good example of a computer that can make smart decisions is the &lt;a href=&quot;https://nest.com/uk/thermostat/meet-nest-thermostat/&quot;&gt;Nest Thermostat&lt;/a&gt;. Nest learns your schedule, how long it takes to heat up your home, and uses this data to decide when to turn your heating on or off. As a result, your home is heated to the temperature you want it to be, when you need it to be, without wasting energy.&lt;/p&gt;
+
+&lt;p&gt;Nest is the main motivation for my next Arduino project, which is to automate control of my appartment&amp;#39;s central heating. In order to automate it, I need some way of controlling it, a way of turning my heating on and off programatically using the Arduino. The way that Nest does this is through a &lt;a href=&quot;https://nest.com/uk/support/article/What-is-Heat-Link&quot;&gt;heat link&lt;/a&gt; device which connects directly to your boiler&amp;#39;s thermostat cables. My existing thermostat is wireless, and I didn&amp;#39;t want to dig around to find or play with thermostat cables, so I looked for an less intrusive option. I found a &lt;a href=&quot;http://www.stevenhale.co.uk/main/2013/08/home-automation-reverse-engineering-a-worcester-bosch-dt10rf-wireless-thermostat/&quot;&gt;post on Steven Hale&amp;#39;s blog&lt;/a&gt; in which he intercepted the on/off messages sent by his wireless thermostat to his boiler, and then re-transmitted those same messages to programatically control his central heating. I follow this same approach, but make use of a cheap USB TV tuner and &lt;a href=&quot;http://www.rtl-sdr.com/about-rtl-sdr/&quot;&gt;Software Defined Radio&lt;/a&gt; for capturing the signals, instead of a soundcard based logic analyser.&lt;/p&gt;
+
+&lt;p&gt;RTL-SDR is a project for building a Software Defined Radio using the RTL2832U chip found in most USB TV tuners. The &lt;a href=&quot;http://www.rtl-sdr.com/rtl-sdr-quick-start-guide/&quot;&gt;basic setup&lt;/a&gt; will set you back less than £10, and allows you listen to radio signals in the frequency range 20 MHz to 1.7 GHz. This range includes AM/FM/DAB radio, digital TV, GSM channels used by mobile phones, and most importantly for this project, the un-licensed (at least in the UK) 433 MHz channel for short range devices such as boilers.&lt;/p&gt;
+
+&lt;h2&gt;Capturing the Messages&lt;/h2&gt;
+
+&lt;p&gt;Using &lt;a href=&quot;http://sdrsharp.com/#sdrsharp&quot;&gt;SDRSharp&lt;/a&gt;, I was able to set the listening frequency to 433 MHz and watch radio traffic stream in real-time. To check that I had tuned into the same frequency as that used by my thermostat, I turned up the temperature setting on the thermostat so that it would transmit an on signal to the boilder. I noticed three spikes show up in SDRSharp in short succession, and the same three when forcing the corresponding off signal. To capture the data being sent, I futher tuned the frequency in SDRSharp to that at which I saw the spikes, and clicked record. 
+&lt;h2&gt;Analysing and Re-transmitting the Messages&lt;/h2&gt;
+I opend up the recorded waveforms in &lt;a href=&quot;http://audacityteam.org/&quot;&gt;Audacity&lt;/a&gt;, an audio editor that happens to work well for analysing radio signals.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Arduino Projects</title>
+   <link href="http://www.tristanpollitt.com/2015/08/10/arduino-projects/"/>
+   <updated>2015-08-10T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/08/10/arduino-projects</id>
+   <content type="html">&lt;p&gt;I&amp;#39;ve had an interest in electronics and programming from an early age, but until recently had never really put the two together. Last Christmas I received an &lt;a href=&quot;https://www.arduino.cc/en/Main/arduinoBoardUno&quot;&gt;Arduino UNO&lt;/a&gt; as a present, and for the first time was able to write code that made real stuff happen, from simple things like &lt;a href=&quot;https://www.arduino.cc/en/Tutorial/Blink&quot;&gt;making an LED blink&lt;/a&gt;, to more practical projects such as building a Sous-Vide cooker and controlling my central heating using a radio transmitter! That&amp;#39;s not to say the code I write in my every day job doesn&amp;#39;t do &amp;#39;real stuff&amp;#39;, but there is something special about seeing the direct physical effects of code that I wrote executing on a tiny chip right in front of me.&lt;/p&gt;
+
+&lt;p&gt;The Arduino makes it super easy to connect up hardware components and tell them what to do, which is one major advantage over boards such as the Raspberry PI, which require a fair bit more set-up and configuration before you can begin talking to arbitrary hardware perhipherals through the GPIO pins. The Arduino does have somewhat &lt;a href=&quot;https://www.arduino.cc/en/Tutorial/Memory&quot;&gt;limited memory&lt;/a&gt; and processing speed (16MHz), but for most hardware projects this is not an issue.&lt;/p&gt;
+
+&lt;p&gt;In the next couple of posts I&amp;#39;ll go into details about some of the Arduino projects I&amp;#39;ve been working on.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Hello World!</title>
+   <link href="http://www.tristanpollitt.com/2015/08/08/hello-world/"/>
+   <updated>2015-08-08T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/08/08/hello-world</id>
+   <content type="html">&lt;p&gt;Welcome to my tech blog. I plan to use this blog for sharing interesting posts and projects relating to coding and technology, in the hope of documenting my thoughts and contributing back to the broader community of tech enthusiasts. I hope you enjoy reading my posts :) &lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>

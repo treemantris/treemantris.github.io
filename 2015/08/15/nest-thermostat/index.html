@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Building a Nest Thermostat With Arduino Part 1 - Control &middot; Tristan's Tech Blog
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tristan's Tech Blog
+        </a>
+      </h1>
+      <p class="lead"></p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/archive/">Archive</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      <!-- <a class="sidebar-nav-item" href="https://github.com/treemantris/archive/v2.1.0.zip">Download</a>
+      <a class="sidebar-nav-item" href="https://github.com/treemantris">GitHub project</a>
+      <span class="sidebar-nav-item">Currently v2.1.0</span> -->
+    </nav>
+    
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Building a Nest Thermostat With Arduino Part 1 - Control</h1>
+  <span class="post-date">15 Aug 2015</span>
+  <p>The idea of a fully automated smart-home is an appealing one, and having a computer take care of repetitive tasks makes sense not only because it lets you be lazy, but also because a computer can make smart decisions based on data that you might not think or care about. One good example of a computer that can make smart decisions is the <a href="https://nest.com/uk/thermostat/meet-nest-thermostat/">Nest Thermostat</a>. Nest learns your schedule, how long it takes to heat up your home, and uses this data to decide when to turn your heating on or off. As a result, your home is heated to the temperature you want it to be, when you need it to be, without wasting energy.</p>
+
+<p>Nest is the main motivation for my next Arduino project, which is to automate control of my appartment&#39;s central heating. In order to automate it, I need some way of controlling it, a way of turning my heating on and off programatically using the Arduino. The way that Nest does this is through a <a href="https://nest.com/uk/support/article/What-is-Heat-Link">heat link</a> device which connects directly to your boiler&#39;s thermostat cables. My existing thermostat is wireless, and I didn&#39;t want to dig around to find or play with thermostat cables, so I looked for an less intrusive option. I found a <a href="http://www.stevenhale.co.uk/main/2013/08/home-automation-reverse-engineering-a-worcester-bosch-dt10rf-wireless-thermostat/">post on Steven Hale&#39;s blog</a> in which he intercepted the on/off messages sent by his wireless thermostat to his boiler, and then re-transmitted those same messages to programatically control his central heating. I follow this same approach, but make use of a cheap USB TV tuner and <a href="http://www.rtl-sdr.com/about-rtl-sdr/">Software Defined Radio</a> for capturing the signals, instead of a soundcard based logic analyser.</p>
+
+<p>RTL-SDR is a project for building a Software Defined Radio using the RTL2832U chip found in most USB TV tuners. The <a href="http://www.rtl-sdr.com/rtl-sdr-quick-start-guide/">basic setup</a> will set you back less than £10, and allows you listen to radio signals in the frequency range 20 MHz to 1.7 GHz. This range includes AM/FM/DAB radio, digital TV, GSM channels used by mobile phones, and most importantly for this project, the un-licensed (at least in the UK) 433 MHz channel for short range devices such as boilers.</p>
+
+<h2>Capturing the Messages</h2>
+
+<p>Using <a href="http://sdrsharp.com/#sdrsharp">SDRSharp</a>, I was able to set the listening frequency to 433 MHz and watch radio traffic stream in real-time. To check that I had tuned into the same frequency as that used by my thermostat, I turned up the temperature setting on the thermostat so that it would transmit an on signal to the boilder. I noticed three spikes show up in SDRSharp in short succession, and the same three when forcing the corresponding off signal. To capture the data being sent, I futher tuned the frequency in SDRSharp to that at which I saw the spikes, and clicked record. 
+<h2>Analysing and Re-transmitting the Messages</h2>
+I opend up the recorded waveforms in <a href="http://audacityteam.org/">Audacity</a>, an audio editor that happens to work well for analysing radio signals.</p>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="TristanPollitt" data-size="large" data-count="none" data-dnt="true">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+
+<!-- <div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/08/15/sous-vide/">
+            Building a Sous-Vide Cooker Using Arduino
+            <small>15 Aug 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/08/10/arduino-projects/">
+            Arduino Projects
+            <small>10 Aug 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/08/08/hello-world/">
+            Hello World!
+            <small>08 Aug 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div> -->
+
+
+
+  
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'tristanstechblog';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  
+</div>
+
+
+
+    </div>
+
+  </body>
+</html>

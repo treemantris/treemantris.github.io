@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Tristan's Tech Blog &middot; 
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tristan's Tech Blog
+        </a>
+      </h1>
+      <p class="lead"></p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item active" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/archive/">Archive</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      <!-- <a class="sidebar-nav-item" href="https://github.com/treemantris/archive/v2.1.0.zip">Download</a>
+      <a class="sidebar-nav-item" href="https://github.com/treemantris">GitHub project</a>
+      <span class="sidebar-nav-item">Currently v2.1.0</span> -->
+    </nav>
+    
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/08/15/sous-vide/">
+        Building a Sous-Vide Cooker Using Arduino
+      </a>
+    </h1>
+
+    <span class="post-date">15 Aug 2015</span>
+
+    <p>Sous-vide is a method for cooking food in a very precise manner to achieve consistently perfect results. The food is vacuum-sealed in a plastic bag and submerged in a temperature-controlled bath of water for a pre-determined amount of time, after which it is either ready to serve, or as in the case of steak, quickly seared in a hot cast-iron pan before serving. The result is food cooked to perfection, steak that&#39;s just as rare as you want it and slices like butter, or eggs poached to exactly the right consistency (at least in theory - in practice it can get a bit messy).</p>
+
+<p>Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed <a href="http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS">this instructable</a> for the most part, using the same temperature probe and LED display, but with much simplified code. </p>
+
+<p>Here&#39;s how I did it.</p>
+
+<h2>Step 1: Components</h2>
+
+<h2>Step 2: Wiring it together</h2>
+
+<h2>Step 3: Code</h2>
+
+<h2>Step 4: Safety and Testing</h2>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/08/15/nest-thermostat/">
+        Building a Nest Thermostat With Arduino Part 1 - Control
+      </a>
+    </h1>
+
+    <span class="post-date">15 Aug 2015</span>
+
+    <p>The idea of a fully automated smart-home is an appealing one, and having a computer take care of repetitive tasks makes sense not only because it lets you be lazy, but also because a computer can make smart decisions based on data that you might not think or care about. One good example of a computer that can make smart decisions is the <a href="https://nest.com/uk/thermostat/meet-nest-thermostat/">Nest Thermostat</a>. Nest learns your schedule, how long it takes to heat up your home, and uses this data to decide when to turn your heating on or off. As a result, your home is heated to the temperature you want it to be, when you need it to be, without wasting energy.</p>
+
+<p>Nest is the main motivation for my next Arduino project, which is to automate control of my appartment&#39;s central heating. In order to automate it, I need some way of controlling it, a way of turning my heating on and off programatically using the Arduino. The way that Nest does this is through a <a href="https://nest.com/uk/support/article/What-is-Heat-Link">heat link</a> device which connects directly to your boiler&#39;s thermostat cables. My existing thermostat is wireless, and I didn&#39;t want to dig around to find or play with thermostat cables, so I looked for an less intrusive option. I found a <a href="http://www.stevenhale.co.uk/main/2013/08/home-automation-reverse-engineering-a-worcester-bosch-dt10rf-wireless-thermostat/">post on Steven Hale&#39;s blog</a> in which he intercepted the on/off messages sent by his wireless thermostat to his boiler, and then re-transmitted those same messages to programatically control his central heating. I follow this same approach, but make use of a cheap USB TV tuner and <a href="http://www.rtl-sdr.com/about-rtl-sdr/">Software Defined Radio</a> for capturing the signals, instead of a soundcard based logic analyser.</p>
+
+<p>RTL-SDR is a project for building a Software Defined Radio using the RTL2832U chip found in most USB TV tuners. The <a href="http://www.rtl-sdr.com/rtl-sdr-quick-start-guide/">basic setup</a> will set you back less than £10, and allows you listen to radio signals in the frequency range 20 MHz to 1.7 GHz. This range includes AM/FM/DAB radio, digital TV, GSM channels used by mobile phones, and most importantly for this project, the un-licensed (at least in the UK) 433 MHz channel for short range devices such as boilers.</p>
+
+<h2>Capturing the Messages</h2>
+
+<p>Using <a href="http://sdrsharp.com/#sdrsharp">SDRSharp</a>, I was able to set the listening frequency to 433 MHz and watch radio traffic stream in real-time. To check that I had tuned into the same frequency as that used by my thermostat, I turned up the temperature setting on the thermostat so that it would transmit an on signal to the boilder. I noticed three spikes show up in SDRSharp in short succession, and the same three when forcing the corresponding off signal. To capture the data being sent, I futher tuned the frequency in SDRSharp to that at which I saw the spikes, and clicked record. 
+<h2>Analysing and Re-transmitting the Messages</h2>
+I opend up the recorded waveforms in <a href="http://audacityteam.org/">Audacity</a>, an audio editor that happens to work well for analysing radio signals.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/08/10/arduino-projects/">
+        Arduino Projects
+      </a>
+    </h1>
+
+    <span class="post-date">10 Aug 2015</span>
+
+    <p>I&#39;ve had an interest in electronics and programming from an early age, but until recently had never really put the two together. Last Christmas I received an <a href="https://www.arduino.cc/en/Main/arduinoBoardUno">Arduino UNO</a> as a present, and for the first time was able to write code that made real stuff happen, from simple things like <a href="https://www.arduino.cc/en/Tutorial/Blink">making an LED blink</a>, to more practical projects such as building a Sous-Vide cooker and controlling my central heating using a radio transmitter! That&#39;s not to say the code I write in my every day job doesn&#39;t do &#39;real stuff&#39;, but there is something special about seeing the direct physical effects of code that I wrote executing on a tiny chip right in front of me.</p>
+
+<p>The Arduino makes it super easy to connect up hardware components and tell them what to do, which is one major advantage over boards such as the Raspberry PI, which require a fair bit more set-up and configuration before you can begin talking to arbitrary hardware perhipherals through the GPIO pins. The Arduino does have somewhat <a href="https://www.arduino.cc/en/Tutorial/Memory">limited memory</a> and processing speed (16MHz), but for most hardware projects this is not an issue.</p>
+
+<p>In the next couple of posts I&#39;ll go into details about some of the Arduino projects I&#39;ve been working on.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2015/08/08/hello-world/">
+        Hello World!
+      </a>
+    </h1>
+
+    <span class="post-date">08 Aug 2015</span>
+
+    <p>Welcome to my tech blog. I plan to use this blog for sharing interesting posts and projects relating to coding and technology, in the hope of documenting my thoughts and contributing back to the broader community of tech enthusiasts. I hope you enjoy reading my posts :) </p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    <span class="pagination-item newer">Newer</span>
+  
+</div>
+    </div>
+
+  </body>
+</html>
