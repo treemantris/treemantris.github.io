@@ -11,7 +11,7 @@
 
   <title>
     
-      Tristan's Tech Blog &middot; 
+      Building a Simple Sous-Vide Cooker Using Arduino &middot; Tristan's Tech Blog
     
   </title>
 
@@ -44,7 +44,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="sidebar-nav-item active" href="/">Home</a>
+      <a class="sidebar-nav-item" href="/">Home</a>
 
       
 
@@ -103,18 +103,10 @@
 
 
     <div class="content container">
-      <div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/08/29/sous-vide/">
-        Building a Simple Sous-Vide Cooker Using Arduino
-      </a>
-    </h1>
-
-    <span class="post-date">29 Aug 2015</span>
-
-    <p>Sous-vide is a method for cooking food in a very precise manner to achieve consistently perfect results. The food is vacuum-sealed in a plastic bag and submerged in a temperature-controlled bath of water for a pre-determined amount of time, after which it is either ready to serve, or as in the case of steak, quickly seared in a hot cast-iron pan before serving. The result is food cooked to perfection, steak that&#39;s just as rare as you want it and slices like butter, or eggs poached to exactly the right consistency (at least in theory - in practice it can get a bit messy).</p>
+      <div class="post">
+  <h1 class="post-title">Building a Simple Sous-Vide Cooker Using Arduino</h1>
+  <span class="post-date">29 Aug 2015</span>
+  <p>Sous-vide is a method for cooking food in a very precise manner to achieve consistently perfect results. The food is vacuum-sealed in a plastic bag and submerged in a temperature-controlled bath of water for a pre-determined amount of time, after which it is either ready to serve, or as in the case of steak, quickly seared in a hot cast-iron pan before serving. The result is food cooked to perfection, steak that&#39;s just as rare as you want it and slices like butter, or eggs poached to exactly the right consistency (at least in theory - in practice it can get a bit messy).</p>
 
 <p>Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed <a href="http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS">this instructable</a> for the most part, using the same temperature probe and LED display, but with much simplified code. </p>
 
@@ -166,48 +158,56 @@
 
 <p>Now that your cooker is set up, it&#39;s time to get cooking! So far I&#39;ve tried <a href="http://www.chefsteps.com/activities/sous-vide-steak">steak</a> and <a href="http://www.chefsteps.com/activities/75-c-egg">poached eggs</a>, with varying results. It might take a few attempts before you get it right, but when you do it is well worth it. Enjoy!</p>
 
-  </div>
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="TristanPollitt" data-size="large" data-count="none" data-dnt="true">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+
+<!-- <div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/08/10/arduino-projects/">
+            Arduino Projects
+            <small>10 Aug 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/08/08/hello-world/">
+            Hello World!
+            <small>08 Aug 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div> -->
+
+
+
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/08/10/arduino-projects/">
-        Arduino Projects
-      </a>
-    </h1>
-
-    <span class="post-date">10 Aug 2015</span>
-
-    <p>I&#39;ve had an interest in electronics and programming from an early age, but until recently had never really put the two together. Last Christmas I received an <a href="https://www.arduino.cc/en/Main/arduinoBoardUno">Arduino UNO</a> as a present, and for the first time was able to write code that made real stuff happen, from simple things like <a href="https://www.arduino.cc/en/Tutorial/Blink">making an LED blink</a>, to more practical projects such as building a Sous-Vide cooker and controlling my central heating using a radio transmitter! That&#39;s not to say the code I write in my every day job doesn&#39;t do &#39;real stuff&#39;, but there is something special about seeing the direct physical effects of code that I wrote executing on a tiny chip right in front of me.</p>
-
-<p>The Arduino makes it super easy to connect up hardware components and tell them what to do, which is one major advantage over boards such as the Raspberry PI, which require a fair bit more set-up and configuration before you can begin talking to arbitrary hardware perhipherals through the GPIO pins. The Arduino does have somewhat <a href="https://www.arduino.cc/en/Tutorial/Memory">limited memory</a> and processing speed (16MHz), but for most hardware projects this is not an issue.</p>
-
-<p>In the next couple of posts I&#39;ll go into details about some of the Arduino projects I&#39;ve been working on.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2015/08/08/hello-world/">
-        Hello World!
-      </a>
-    </h1>
-
-    <span class="post-date">08 Aug 2015</span>
-
-    <p>Welcome to my tech blog. I plan to use this blog for sharing interesting posts and projects relating to coding and technology, in the hope of documenting my thoughts and contributing back to the broader community of tech enthusiasts. I hope you enjoy reading my posts :) </p>
-
-  </div>
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'tristanstechblog';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
   
 </div>
 
-<div class="pagination">
-  
-    <span class="pagination-item older">Older</span>
-  
-  
-    <span class="pagination-item newer">Newer</span>
-  
-</div>
+
+
     </div>
 
   </body>

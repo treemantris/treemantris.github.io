@@ -4,13 +4,72 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-08-17T22:22:54+01:00</updated>
+ <updated>2015-08-29T22:18:29+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Building a Simple Sous-Vide Cooker Using Arduino</title>
+   <link href="http://www.tristanpollitt.com/2015/08/29/sous-vide/"/>
+   <updated>2015-08-29T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/08/29/sous-vide</id>
+   <content type="html">&lt;p&gt;Sous-vide is a method for cooking food in a very precise manner to achieve consistently perfect results. The food is vacuum-sealed in a plastic bag and submerged in a temperature-controlled bath of water for a pre-determined amount of time, after which it is either ready to serve, or as in the case of steak, quickly seared in a hot cast-iron pan before serving. The result is food cooked to perfection, steak that&amp;#39;s just as rare as you want it and slices like butter, or eggs poached to exactly the right consistency (at least in theory - in practice it can get a bit messy).&lt;/p&gt;
+
+&lt;p&gt;Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed &lt;a href=&quot;http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS&quot;&gt;this instructable&lt;/a&gt; for the most part, using the same temperature probe and LED display, but with much simplified code. &lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how I did it.&lt;/p&gt;
+
+&lt;h2&gt;Step 1: Components&lt;/h2&gt;
+
+&lt;p&gt;You&amp;#39;ll need the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MAX7219 based LED display&lt;/li&gt;
+&lt;li&gt;DS18B20 based waterproof temperature probe&lt;/li&gt;
+&lt;li&gt;5V relay module&lt;/li&gt;
+&lt;li&gt;2 push buttons&lt;/li&gt;
+&lt;li&gt;4.7k ohm resistor&lt;/li&gt;
+&lt;li&gt;Arduino&lt;/li&gt;
+&lt;li&gt;Breadboard/protoyping board&lt;/li&gt;
+&lt;li&gt;Rice cooker or slow cooker&lt;/li&gt;
+&lt;li&gt;Project container (preferrably water/splash-proof)&lt;/li&gt;
+&lt;li&gt;Mains extension cable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Step 2: Wiring it together&lt;/h2&gt;
+
+&lt;p&gt;The wiring is fairly straightforward, and shouldn&amp;#39;t require any soldering if you have a breadboard and a bunch of jumper wires. The trickiest part is connecting the relay to the mains extension cable.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/diagram.svg&quot; alt=&quot;Arduino Wiring Diagram&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The relay will act as a switch for the slow cooker, and is controlled by a digital pin on the Arduino. For the relay module I am using, sending the pin a digital value of 0 (LOW), will activate the switch, in our case turning the cooker on, and a value of 1 (HIGH) will turn it off. This is known as Normally Open (NO) mode, where you have to activate the relay to connect the switch. The fact that you have to send a LOW signal to activate the switch can be a bit confusing.&lt;/p&gt;
+
+&lt;p&gt;To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable will be brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.&lt;/p&gt;
+
+&lt;h2&gt;Step 3: Code&lt;/h2&gt;
+
+&lt;p&gt;My code is &lt;a href=&quot;https://github.com/treemantris/SimpleSousVide/blob/master/simpleSousVide.ino&quot;&gt;available on GitHub&lt;/a&gt;, you&amp;#39;ll need to install the following Arduino libraries for it to work:
+&lt;a href=&quot;https://github.com/wayoda/LedControl&quot;&gt;LedControl&lt;/a&gt;,
+&lt;a href=&quot;https://github.com/PaulStoffregen/OneWire&quot;&gt;OneWire&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/milesburton/Arduino-Temperature-Control-Library&quot;&gt;DallasTemperature&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Step 4: Safety and Testing&lt;/h2&gt;
+
+&lt;p&gt;Once you&amp;#39;ve wired everything up and loaded up the code, it should be ready to test. When you power it up, you&amp;#39;ll see two numbers appear on the display. The first number is the desired temperature, which initially is 65°C, and the second number is the measured temperature. The push buttons are used to control the desired temperature in increments of 0.5°C. Initially, the relay will be active because room temperature will be less than 65°C. To test everything works, set the desired tempreature to lower than the current temperature, and you should hear a click as the relay turns off.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/sousVide.jpg&quot; alt=&quot;The final product&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Because we are dealing with high voltages, it is important to keep the electronics away from the cooker so that they don&amp;#39;t get wet. I created a waterproof container by stacking two plastic take-away boxes, sandwiching the relay and exposed mains cables in the bottom compartment and the Arduino in the top, with holes cut between them for the wires. You might want to use some kind of water-tight sealant to be extra safe. I also used a battery pack to power the Arduino, connected directly to the 5V pin, which fits nicely inside the sealed box.&lt;/p&gt;
+
+&lt;h2&gt;Step 5: Get Coooking!&lt;/h2&gt;
+
+&lt;p&gt;Now that your cooker is set up, it&amp;#39;s time to get cooking! So far I&amp;#39;ve tried &lt;a href=&quot;http://www.chefsteps.com/activities/sous-vide-steak&quot;&gt;steak&lt;/a&gt; and &lt;a href=&quot;http://www.chefsteps.com/activities/75-c-egg&quot;&gt;poached eggs&lt;/a&gt;, with varying results. It might take a few attempts before you get it right, but when you do it is well worth it. Enjoy!&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Arduino Projects</title>
