@@ -4,7 +4,7 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-08-29T22:24:06+01:00</updated>
+ <updated>2015-08-30T12:25:03+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Building a Simple Sous-Vide Cooker Using Arduino</title>
-   <link href="http://www.tristanpollitt.com/2015/08/29/sous-vide/"/>
+   <link href="http://www.tristanpollitt.com/2015/08/29/building-a-simple-sous-vide-cooker-using-arduino/"/>
    <updated>2015-08-29T00:00:00+01:00</updated>
-   <id>http://www.tristanpollitt.com/2015/08/29/sous-vide</id>
+   <id>http://www.tristanpollitt.com/2015/08/29/building-a-simple-sous-vide-cooker-using-arduino</id>
    <content type="html">&lt;p&gt;Sous-vide is a method for cooking food in a very precise manner to achieve consistently perfect results. The food is vacuum-sealed in a plastic bag and submerged in a temperature-controlled bath of water for a pre-determined amount of time, after which it is either ready to serve, or as in the case of steak, quickly seared in a hot cast-iron pan before serving. The result is food cooked to perfection, steak that&amp;#39;s just as rare as you want it and slices like butter, or eggs poached to exactly the right consistency (at least in theory - in practice it can get a bit messy).&lt;/p&gt;
 
 &lt;p&gt;Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed &lt;a href=&quot;http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS&quot;&gt;this instructable&lt;/a&gt; for the most part, using the same temperature probe and LED display, but with much simplified code. &lt;/p&gt;
