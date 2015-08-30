@@ -4,7 +4,7 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-08-30T12:25:03+01:00</updated>
+ <updated>2015-08-30T13:42:00+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
@@ -42,13 +42,15 @@
 
 &lt;h2&gt;Step 2: Wiring it together&lt;/h2&gt;
 
+&lt;p&gt;Tthe temperature sensore will sit in the cooker filled with hot water, which will be connected to the mains extension. Our circuit will control the mains extensions cable, turning the cooker on and off, forming a basic feedback loop.&lt;/p&gt;
+
 &lt;p&gt;The wiring is fairly straightforward, and shouldn&amp;#39;t require any soldering if you have a breadboard and a bunch of jumper wires. The trickiest part is connecting the relay to the mains extension cable.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/diagram.svg&quot; alt=&quot;Arduino Wiring Diagram&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;The relay will act as a switch for the slow cooker, and is controlled by a digital pin on the Arduino. For the relay module I am using, sending the pin a digital value of 0 (LOW), will activate the switch, in our case turning the cooker on, and a value of 1 (HIGH) will turn it off. This is known as Normally Open (NO) mode, where you have to activate the relay to connect the switch. The fact that you have to send a LOW signal to activate the switch can be a bit confusing.&lt;/p&gt;
 
-&lt;p&gt;To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable will be brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.&lt;/p&gt;
+&lt;p&gt;To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable is brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.&lt;/p&gt;
 
 &lt;h2&gt;Step 3: Code&lt;/h2&gt;
 
@@ -67,7 +69,9 @@
 
 &lt;h2&gt;Step 5: Get Coooking!&lt;/h2&gt;
 
-&lt;p&gt;Now that your cooker is set up, it&amp;#39;s time to get cooking! So far I&amp;#39;ve tried &lt;a href=&quot;http://www.chefsteps.com/activities/sous-vide-steak&quot;&gt;steak&lt;/a&gt; and &lt;a href=&quot;http://www.chefsteps.com/activities/75-c-egg&quot;&gt;poached eggs&lt;/a&gt;, with varying results. It might take a few attempts before you get it right, but when you do it is well worth it. Enjoy!&lt;/p&gt;
+&lt;p&gt;Now that your cooker is set up, it&amp;#39;s time to get cooking! So far I&amp;#39;ve tried &lt;a href=&quot;http://www.chefsteps.com/activities/sous-vide-steak&quot;&gt;steak&lt;/a&gt; and &lt;a href=&quot;http://www.chefsteps.com/activities/75-c-egg&quot;&gt;poached eggs&lt;/a&gt;, with varying results. One thing I&amp;#39;ve found to work well is to fill the cooker up with boiling water from a kettle and let it cool to the desired temperature, rather than filling it with cold water and waiting for it to heat up. It might take a few attempts before you get it right, but when you do it is well worth it.&lt;/p&gt;
+
+&lt;p&gt;Enjoy!&lt;/p&gt;
 </content>
  </entry>
  

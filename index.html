@@ -139,13 +139,15 @@
 
 <h2>Step 2: Wiring it together</h2>
 
+<p>Tthe temperature sensore will sit in the cooker filled with hot water, which will be connected to the mains extension. Our circuit will control the mains extensions cable, turning the cooker on and off, forming a basic feedback loop.</p>
+
 <p>The wiring is fairly straightforward, and shouldn&#39;t require any soldering if you have a breadboard and a bunch of jumper wires. The trickiest part is connecting the relay to the mains extension cable.</p>
 
 <p><img src="/images/diagram.svg" alt="Arduino Wiring Diagram"></p>
 
 <p>The relay will act as a switch for the slow cooker, and is controlled by a digital pin on the Arduino. For the relay module I am using, sending the pin a digital value of 0 (LOW), will activate the switch, in our case turning the cooker on, and a value of 1 (HIGH) will turn it off. This is known as Normally Open (NO) mode, where you have to activate the relay to connect the switch. The fact that you have to send a LOW signal to activate the switch can be a bit confusing.</p>
 
-<p>To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable will be brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.</p>
+<p>To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable is brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.</p>
 
 <h2>Step 3: Code</h2>
 
@@ -164,7 +166,9 @@
 
 <h2>Step 5: Get Coooking!</h2>
 
-<p>Now that your cooker is set up, it&#39;s time to get cooking! So far I&#39;ve tried <a href="http://www.chefsteps.com/activities/sous-vide-steak">steak</a> and <a href="http://www.chefsteps.com/activities/75-c-egg">poached eggs</a>, with varying results. It might take a few attempts before you get it right, but when you do it is well worth it. Enjoy!</p>
+<p>Now that your cooker is set up, it&#39;s time to get cooking! So far I&#39;ve tried <a href="http://www.chefsteps.com/activities/sous-vide-steak">steak</a> and <a href="http://www.chefsteps.com/activities/75-c-egg">poached eggs</a>, with varying results. One thing I&#39;ve found to work well is to fill the cooker up with boiling water from a kettle and let it cool to the desired temperature, rather than filling it with cold water and waiting for it to heat up. It might take a few attempts before you get it right, but when you do it is well worth it.</p>
+
+<p>Enjoy!</p>
 
   </div>
   
