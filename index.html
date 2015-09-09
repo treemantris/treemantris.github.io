@@ -107,6 +107,77 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2015/09/09/adding-wifi-to-your-hardware-projects-esp8266/">
+        Adding WiFi to Your Hardware Projects Using The ESP8266
+      </a>
+    </h1>
+
+    <span class="post-date">09 Sep 2015</span>
+
+    <p>Having built several Arduino based projects over the last year, the next step for me was to add WiFi connectivity to open up the possiblity for buidling things that can be controlled wirlessly, things that might actually be usfeul as opposed to just fun projects.</p>
+
+<p>Looking at the options, the easiest way to add Wifi to your project might be a shield such as the official <a href="https://www.arduino.cc/en/Main/ArduinoWiFiShield">Arduino WiFi Shield</a>, or a <a href="https://www.adafruit.com/products/1491">CC3000 Based Shield</a>, which will set you back in the region of £15 - £20. The advantage of using a shield is that they snap straight onto the Arduino board, and don&#39;t require a messay array of jumper wires. However, a bit more searching lead me to some interesting alternatives. In particular the ESP8266 module stands out as a very cheap (~£1.70 shipped from China) and surprisingly performant option.</p>
+
+<p><img src="/images/esp8266.jpg" alt="The ESP8266 Module"></p>
+
+<p>The module is essentially a System-on-a-Chip (SoC) that contains a 32-bit CPU clocked to 80 MHz, a WiFi transmitter/reciever, some internal RAM and ROM, plus an external flash memory chip. All in all it&#39;s a pretty nifty little thing, and provides a really simple way of adding WiFi connectivity to your hardware projects.</p>
+
+<h2>Wireless Serial Port</h2>
+
+<p>The default firmware lets you treat the ESP8266 as a wireless serial port, ie - you can send data in the same way as you would print to a serial USB sconnection. Simply connect up the Tx and Rx ports of the ESP8266 to the Rx and Tx ports of your Arduino or similar device, and then tell it what to do by executing commands using <code>Serial.write(command)</code>. The commands are pretty straightforward, you can reset the module, set it up as an access point, connect to an access point, send data to connected clients, etc. The full list is available <a href="http://wiki.iteadstudio.com/ESP8266_Serial_WIFI_Module#AT_Commands">here</a>.</p>
+
+<p>I wrote a very basic server example which runs on an Arduino connected to the ESP8266. It repeatedly sends the text &#39;Hello world&#39; to clients connected on port 23. To find the IP address of your module, you can run the command <code>AT+CIFSR</code> on it. When the server is running you should then be able to connect to this IP on port 23 using a network client terminal such as telnet or <a href="http://www.chiark.greenend.org.uk/%7Esgtatham/putty/download.html">PuTTY</a>, and see &#39;Hello world&#39; repeatedly being printed to your terminal. Here&#39;s the code:</p>
+
+<div class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">//set baud rate to match module
+</span>  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+  <span class="c1">//reset the module
+</span>  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"AT+RST"</span><span class="p">);</span>
+  <span class="c1">//give it time to reboot
+</span>  <span class="n">delay</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
+  
+  <span class="c1">//time-out a Serial.find after 5 seconds
+</span>  <span class="n">Serial</span><span class="p">.</span><span class="n">setTimeout</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
+
+  <span class="c1">//set module into access point and client mode
+</span>  <span class="n">sendCommandToESP</span><span class="p">(</span><span class="s">"AT+CWMODE=3"</span><span class="p">);</span>  
+  <span class="c1">//connect to my home wifi
+</span>  <span class="n">sendCommandToESP</span><span class="p">(</span><span class="s">"AT+CWJAP=</span><span class="se">\"</span><span class="s">WIFI_NETWORK_NAME</span><span class="se">\"</span><span class="s">,</span><span class="se">\"</span><span class="s">PASSWORD</span><span class="se">\"</span><span class="s">"</span><span class="p">);</span>
+  <span class="c1">//allow multiple connections
+</span>  <span class="n">sendCommandToESP</span><span class="p">(</span><span class="s">"AT+CIPMUX=1"</span><span class="p">);</span>  
+  <span class="c1">//run server on port 23
+</span>  <span class="n">sendCommandToESP</span><span class="p">(</span><span class="s">"AT+CIPSERVER=1,23"</span><span class="p">);</span> 
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">sendCommandToESP</span><span class="p">(</span><span class="n">String</span> <span class="n">command</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"OK"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//send data to connected device every 4 seconds
+</span><span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">//send 11 bytes on connection '0'
+</span>  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"AT+CIPSEND=0,11"</span><span class="p">);</span>  
+  <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+  <span class="c1">//send the data
+</span>  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"Hello world"</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>To play around with the AT commands, it&#39;s worth getting a USB to Serial TTL converter, and running the commands directly from your computer using a serial port terminal such as <a href="http://freeware.the-meiers.org/">CoolTerm</a>. For wiring everything up, I followed <a href="http://www.esp8266.com/wiki/doku.php?id=getting-started-with-the-esp8266">this tutorial</a> from the ESP8266 community wiki.</p>
+
+<h2>Self-Contained Application Platform</h2>
+
+<p>The integrated processor is used for running the TCP/IP stack as well as all of the additional networking software, separating the low-level network implementation details from your application and hardware by providing an easy to use serial interface. </p>
+
+<p>Impressively, it is also possible to load and run your own application code on the device. There is an <a href="http://www.esp8266.com/">active community of developers and hobbyists</a> using the ESP8266, who have collectively released several SDKs targetting the ESP8266 as a WiFi application platform. There is even an <a href="https://github.com/esp8266/Arduino">Arduino port for the ESP8266</a>, allowing you to run your Arduino code directly on the module itself, all via the Arduino IDE!</p>
+
+<p>I&#39;ve been looking at using the <a href="https://github.com/anakod/Sming">Sming Framework</a> for writing efficient native applications for the ESP8266 in C++. I&#39;ve had a few ideas related to clustering these modules (seeing as they&#39;re so cheap) and Sming looks like a pretty good option for implementing them. The framework has a similar API to the Arduino SDK, and in addition is compatible with most Arduino libraries, which is a huge plus. I&#39;ll post an update if aything interesting comes of it :)</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2015/08/29/building-a-simple-sous-vide-cooker-using-arduino/">
         Building a Simple Sous-Vide Cooker Using Arduino
       </a>

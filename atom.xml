@@ -4,13 +4,80 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-08-30T13:42:00+01:00</updated>
+ <updated>2015-09-09T22:02:08+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Adding WiFi to Your Hardware Projects Using The ESP8266</title>
+   <link href="http://www.tristanpollitt.com/2015/09/09/adding-wifi-to-your-hardware-projects-esp8266/"/>
+   <updated>2015-09-09T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/09/09/adding-wifi-to-your-hardware-projects-esp8266</id>
+   <content type="html">&lt;p&gt;Having built several Arduino based projects over the last year, the next step for me was to add WiFi connectivity to open up the possiblity for buidling things that can be controlled wirlessly, things that might actually be usfeul as opposed to just fun projects.&lt;/p&gt;
+
+&lt;p&gt;Looking at the options, the easiest way to add Wifi to your project might be a shield such as the official &lt;a href=&quot;https://www.arduino.cc/en/Main/ArduinoWiFiShield&quot;&gt;Arduino WiFi Shield&lt;/a&gt;, or a &lt;a href=&quot;https://www.adafruit.com/products/1491&quot;&gt;CC3000 Based Shield&lt;/a&gt;, which will set you back in the region of £15 - £20. The advantage of using a shield is that they snap straight onto the Arduino board, and don&amp;#39;t require a messay array of jumper wires. However, a bit more searching lead me to some interesting alternatives. In particular the ESP8266 module stands out as a very cheap (~£1.70 shipped from China) and surprisingly performant option.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/esp8266.jpg&quot; alt=&quot;The ESP8266 Module&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The module is essentially a System-on-a-Chip (SoC) that contains a 32-bit CPU clocked to 80 MHz, a WiFi transmitter/reciever, some internal RAM and ROM, plus an external flash memory chip. All in all it&amp;#39;s a pretty nifty little thing, and provides a really simple way of adding WiFi connectivity to your hardware projects.&lt;/p&gt;
+
+&lt;h2&gt;Wireless Serial Port&lt;/h2&gt;
+
+&lt;p&gt;The default firmware lets you treat the ESP8266 as a wireless serial port, ie - you can send data in the same way as you would print to a serial USB sconnection. Simply connect up the Tx and Rx ports of the ESP8266 to the Rx and Tx ports of your Arduino or similar device, and then tell it what to do by executing commands using &lt;code&gt;Serial.write(command)&lt;/code&gt;. The commands are pretty straightforward, you can reset the module, set it up as an access point, connect to an access point, send data to connected clients, etc. The full list is available &lt;a href=&quot;http://wiki.iteadstudio.com/ESP8266_Serial_WIFI_Module#AT_Commands&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I wrote a very basic server example which runs on an Arduino connected to the ESP8266. It repeatedly sends the text &amp;#39;Hello world&amp;#39; to clients connected on port 23. To find the IP address of your module, you can run the command &lt;code&gt;AT+CIFSR&lt;/code&gt; on it. When the server is running you should then be able to connect to this IP on port 23 using a network client terminal such as telnet or &lt;a href=&quot;http://www.chiark.greenend.org.uk/%7Esgtatham/putty/download.html&quot;&gt;PuTTY&lt;/a&gt;, and see &amp;#39;Hello world&amp;#39; repeatedly being printed to your terminal. Here&amp;#39;s the code:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c--&quot; data-lang=&quot;c++&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//set baud rate to match module
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;115200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//reset the module
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AT+RST&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//give it time to reboot
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  
+  &lt;span class=&quot;c1&quot;&gt;//time-out a Serial.find after 5 seconds
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//set module into access point and client mode
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;sendCommandToESP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AT+CWMODE=3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  
+  &lt;span class=&quot;c1&quot;&gt;//connect to my home wifi
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;sendCommandToESP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AT+CWJAP=&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;WIFI_NETWORK_NAME&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;PASSWORD&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//allow multiple connections
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;sendCommandToESP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AT+CIPMUX=1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  
+  &lt;span class=&quot;c1&quot;&gt;//run server on port 23
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;sendCommandToESP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AT+CIPSERVER=1,23&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sendCommandToESP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OK&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//send data to connected device every 4 seconds
+&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//send 11 bytes on connection &#39;0&#39;
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AT+CIPSEND=0,11&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  
+  &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//send the data
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello world&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;To play around with the AT commands, it&amp;#39;s worth getting a USB to Serial TTL converter, and running the commands directly from your computer using a serial port terminal such as &lt;a href=&quot;http://freeware.the-meiers.org/&quot;&gt;CoolTerm&lt;/a&gt;. For wiring everything up, I followed &lt;a href=&quot;http://www.esp8266.com/wiki/doku.php?id=getting-started-with-the-esp8266&quot;&gt;this tutorial&lt;/a&gt; from the ESP8266 community wiki.&lt;/p&gt;
+
+&lt;h2&gt;Self-Contained Application Platform&lt;/h2&gt;
+
+&lt;p&gt;The integrated processor is used for running the TCP/IP stack as well as all of the additional networking software, separating the low-level network implementation details from your application and hardware by providing an easy to use serial interface. &lt;/p&gt;
+
+&lt;p&gt;Impressively, it is also possible to load and run your own application code on the device. There is an &lt;a href=&quot;http://www.esp8266.com/&quot;&gt;active community of developers and hobbyists&lt;/a&gt; using the ESP8266, who have collectively released several SDKs targetting the ESP8266 as a WiFi application platform. There is even an &lt;a href=&quot;https://github.com/esp8266/Arduino&quot;&gt;Arduino port for the ESP8266&lt;/a&gt;, allowing you to run your Arduino code directly on the module itself, all via the Arduino IDE!&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve been looking at using the &lt;a href=&quot;https://github.com/anakod/Sming&quot;&gt;Sming Framework&lt;/a&gt; for writing efficient native applications for the ESP8266 in C++. I&amp;#39;ve had a few ideas related to clustering these modules (seeing as they&amp;#39;re so cheap) and Sming looks like a pretty good option for implementing them. The framework has a similar API to the Arduino SDK, and in addition is compatible with most Arduino libraries, which is a huge plus. I&amp;#39;ll post an update if aything interesting comes of it :)&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Building a Simple Sous-Vide Cooker Using Arduino</title>
