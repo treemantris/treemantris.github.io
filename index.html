@@ -118,7 +118,7 @@
 
 <p>Looking at the options, the easiest way to add Wifi to your project might be a shield such as the official <a href="https://www.arduino.cc/en/Main/ArduinoWiFiShield">Arduino WiFi Shield</a>, or a <a href="https://www.adafruit.com/products/1491">CC3000 Based Shield</a>, which will set you back in the region of £15 - £20. The advantage of using a shield is that they snap straight onto the Arduino board, and don&#39;t require a messay array of jumper wires. However, a bit more searching lead me to some interesting alternatives. In particular the ESP8266 module stands out as a very cheap (~£1.70 shipped from China) and surprisingly performant option.</p>
 
-<p><img src="/images/esp8266.jpg" alt="The ESP8266 Module"></p>
+<p><img src="/images/esp8266.JPG" alt="The ESP8266 Module"></p>
 
 <p>The module is essentially a System-on-a-Chip (SoC) that contains a 32-bit CPU clocked to 80 MHz, a WiFi transmitter/reciever, some internal RAM and ROM, plus an external flash memory chip. All in all it&#39;s a pretty nifty little thing, and provides a really simple way of adding WiFi connectivity to your hardware projects.</p>
 
@@ -231,7 +231,7 @@
 
 <p>Once you&#39;ve wired everything up and loaded up the code, it should be ready to test. When you power it up, you&#39;ll see two numbers appear on the display. The first number is the desired temperature, which initially is 65°C, and the second number is the measured temperature. The push buttons are used to control the desired temperature in increments of 0.5°C. Initially, the relay will be active because room temperature will be less than 65°C. To test everything works, set the desired tempreature to lower than the current temperature, and you should hear a click as the relay turns off.</p>
 
-<p><img src="/images/sousVide.JPG" alt="The final product"></p>
+<p><img src="/images/sousVide.jpg" alt="The final product"></p>
 
 <p>Because we are dealing with high voltages, it is important to keep the electronics away from the cooker so that they don&#39;t get wet. I created a waterproof container by stacking two plastic take-away boxes, sandwiching the relay and exposed mains cables in the bottom compartment and the Arduino in the top, with holes cut between them for the wires. You might want to use some kind of water-tight sealant to be extra safe. I also used a battery pack to power the Arduino, connected directly to the 5V pin, which fits nicely inside the sealed box.</p>
 

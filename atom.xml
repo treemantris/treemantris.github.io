@@ -4,7 +4,7 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-09-09T22:23:59+01:00</updated>
+ <updated>2015-09-09T22:26:15+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
@@ -21,7 +21,7 @@
 
 &lt;p&gt;Looking at the options, the easiest way to add Wifi to your project might be a shield such as the official &lt;a href=&quot;https://www.arduino.cc/en/Main/ArduinoWiFiShield&quot;&gt;Arduino WiFi Shield&lt;/a&gt;, or a &lt;a href=&quot;https://www.adafruit.com/products/1491&quot;&gt;CC3000 Based Shield&lt;/a&gt;, which will set you back in the region of £15 - £20. The advantage of using a shield is that they snap straight onto the Arduino board, and don&amp;#39;t require a messay array of jumper wires. However, a bit more searching lead me to some interesting alternatives. In particular the ESP8266 module stands out as a very cheap (~£1.70 shipped from China) and surprisingly performant option.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/esp8266.jpg&quot; alt=&quot;The ESP8266 Module&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/esp8266.JPG&quot; alt=&quot;The ESP8266 Module&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;The module is essentially a System-on-a-Chip (SoC) that contains a 32-bit CPU clocked to 80 MHz, a WiFi transmitter/reciever, some internal RAM and ROM, plus an external flash memory chip. All in all it&amp;#39;s a pretty nifty little thing, and provides a really simple way of adding WiFi connectivity to your hardware projects.&lt;/p&gt;
 
@@ -130,7 +130,7 @@
 
 &lt;p&gt;Once you&amp;#39;ve wired everything up and loaded up the code, it should be ready to test. When you power it up, you&amp;#39;ll see two numbers appear on the display. The first number is the desired temperature, which initially is 65°C, and the second number is the measured temperature. The push buttons are used to control the desired temperature in increments of 0.5°C. Initially, the relay will be active because room temperature will be less than 65°C. To test everything works, set the desired tempreature to lower than the current temperature, and you should hear a click as the relay turns off.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/sousVide.JPG&quot; alt=&quot;The final product&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/sousVide.jpg&quot; alt=&quot;The final product&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;Because we are dealing with high voltages, it is important to keep the electronics away from the cooker so that they don&amp;#39;t get wet. I created a waterproof container by stacking two plastic take-away boxes, sandwiching the relay and exposed mains cables in the bottom compartment and the Arduino in the top, with holes cut between them for the wires. You might want to use some kind of water-tight sealant to be extra safe. I also used a battery pack to power the Arduino, connected directly to the 5V pin, which fits nicely inside the sealed box.&lt;/p&gt;
 
