@@ -4,7 +4,7 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-09-13T17:06:56+01:00</updated>
+ <updated>2015-09-13T17:09:29+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Building a Nest Thermostat With Arduino Part 1 - Control</title>
-   <link href="http://www.tristanpollitt.com/2015/09/13/nest-thermostat/"/>
+   <link href="http://www.tristanpollitt.com/2015/09/13/building-a-nest-thermostat-with-arduino-part1/"/>
    <updated>2015-09-13T00:00:00+01:00</updated>
-   <id>http://www.tristanpollitt.com/2015/09/13/nest-thermostat</id>
+   <id>http://www.tristanpollitt.com/2015/09/13/building-a-nest-thermostat-with-arduino-part1</id>
    <content type="html">&lt;p&gt;The idea of a fully automated smart-home is an appealing one, and having a computer take care of repetitive tasks makes sense not only because it lets you be lazy, but also because a computer can make decisions based on data that you might not think or care about. One good example of a computer that can make smart decisions is the &lt;a href=&quot;https://nest.com/uk/thermostat/meet-nest-thermostat/&quot;&gt;Nest Thermostat&lt;/a&gt;. Nest learns your schedule, how long it takes to heat up your home, and uses this data to decide when to turn your heating on or off. As a result, your home is heated to the temperature you want it to be, when you need it to be, without wasting energy.&lt;/p&gt;
 
 &lt;p&gt;Nest is the main motivation for my next Arduino project, which is to automate control of my appartment&amp;#39;s central heating. In order to automate it, I need some way of controlling it, a way of turning my heating on and off programatically. The way that Nest does this is through a &lt;a href=&quot;https://nest.com/uk/support/article/What-is-Heat-Link&quot;&gt;heat link&lt;/a&gt; device which connects directly to the boiler&amp;#39;s thermostat cables. My existing thermostat is wireless, and I didn&amp;#39;t want to dig around to find or play with thermostat cables, so I looked for an less intrusive option. I found a &lt;a href=&quot;http://www.stevenhale.co.uk/main/2013/08/home-automation-reverse-engineering-a-worcester-bosch-dt10rf-wireless-thermostat/&quot;&gt;post on Steven Hale&amp;#39;s blog&lt;/a&gt; which describes how he intercepted the on/off messages sent by his wireless thermostat to his boiler, and then re-transmitted those same messages to programatically control his central heating. I follow this same approach, but make use of a cheap USB TV tuner and &lt;a href=&quot;http://www.rtl-sdr.com/about-rtl-sdr/&quot;&gt;Software Defined Radio&lt;/a&gt; to capture the control signals, instead of a soundcard based logic analyser.&lt;/p&gt;
