@@ -88,6 +88,14 @@
           
         
       
+        
+          
+        
+      
+        
+          
+        
+      
 
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -114,7 +122,7 @@
 
 <p>The module is essentially a System-on-a-Chip (SoC) that contains a 32-bit CPU clocked to 80 MHz, a WiFi transmitter/reciever, some internal RAM and ROM, plus an external flash memory chip. All in all it&#39;s a pretty nifty little thing, and provides a really simple way of adding WiFi connectivity to your hardware projects.</p>
 
-<h2>Wireless Serial Port</h2>
+<h3>Wireless Serial Port</h3>
 
 <p>The default firmware lets you treat the ESP8266 as a wireless serial port, ie - you can send data in the same way as you would print to a serial USB sconnection. Simply connect up the Tx and Rx ports of the ESP8266 to the Rx and Tx ports of your Arduino or similar device, and then tell it what to do by executing commands using <code>Serial.write(command)</code>. The commands are pretty straightforward, you can reset the module, set it up as an access point, connect to an access point, send data to connected clients, etc. The full list is available <a href="http://wiki.iteadstudio.com/ESP8266_Serial_WIFI_Module#AT_Commands">here</a>.</p>
 
@@ -158,7 +166,7 @@
 
 <p>To play around with the AT commands, it&#39;s worth getting a USB to Serial TTL converter, and running the commands directly from your computer using a serial port terminal such as <a href="http://freeware.the-meiers.org/">CoolTerm</a>. For wiring everything up, I followed <a href="http://www.esp8266.com/wiki/doku.php?id=getting-started-with-the-esp8266">this tutorial</a> from the ESP8266 community wiki.</p>
 
-<h2>Self-Contained Application Platform</h2>
+<h3>Self-Contained Application Platform</h3>
 
 <p>The integrated processor is used for running the TCP/IP stack as well as all of the additional networking software, separating the low-level network implementation details from your application and hardware by providing an easy to use serial interface. </p>
 
@@ -176,6 +184,15 @@
     
       <li>
         <h3>
+          <a href="/2015/09/13/nest-thermostat/">
+            Building a Nest Thermostat With Arduino Part 1 - Control
+            <small>13 Sep 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/08/29/building-a-simple-sous-vide-cooker-using-arduino/">
             Building a Simple Sous-Vide Cooker Using Arduino
             <small>29 Aug 2015</small>
@@ -188,15 +205,6 @@
           <a href="/2015/08/10/arduino-projects/">
             Arduino Projects
             <small>10 Aug 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2015/08/08/hello-world/">
-            Hello World!
-            <small>08 Aug 2015</small>
           </a>
         </h3>
       </li>

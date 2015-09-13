@@ -4,13 +4,61 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-09-09T22:26:15+01:00</updated>
+ <updated>2015-09-13T16:57:21+01:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Building a Nest Thermostat With Arduino Part 1 - Control</title>
+   <link href="http://www.tristanpollitt.com/2015/09/13/nest-thermostat/"/>
+   <updated>2015-09-13T00:00:00+01:00</updated>
+   <id>http://www.tristanpollitt.com/2015/09/13/nest-thermostat</id>
+   <content type="html">&lt;p&gt;The idea of a fully automated smart-home is an appealing one, and having a computer take care of repetitive tasks makes sense not only because it lets you be lazy, but also because a computer can make decisions based on data that you might not think or care about. One good example of a computer that can make smart decisions is the &lt;a href=&quot;https://nest.com/uk/thermostat/meet-nest-thermostat/&quot;&gt;Nest Thermostat&lt;/a&gt;. Nest learns your schedule, how long it takes to heat up your home, and uses this data to decide when to turn your heating on or off. As a result, your home is heated to the temperature you want it to be, when you need it to be, without wasting energy.&lt;/p&gt;
+
+&lt;p&gt;Nest is the main motivation for my next Arduino project, which is to automate control of my appartment&amp;#39;s central heating. In order to automate it, I need some way of controlling it, a way of turning my heating on and off programatically. The way that Nest does this is through a &lt;a href=&quot;https://nest.com/uk/support/article/What-is-Heat-Link&quot;&gt;heat link&lt;/a&gt; device which connects directly to the boiler&amp;#39;s thermostat cables. My existing thermostat is wireless, and I didn&amp;#39;t want to dig around to find or play with thermostat cables, so I looked for an less intrusive option. I found a &lt;a href=&quot;http://www.stevenhale.co.uk/main/2013/08/home-automation-reverse-engineering-a-worcester-bosch-dt10rf-wireless-thermostat/&quot;&gt;post on Steven Hale&amp;#39;s blog&lt;/a&gt; which describes how he intercepted the on/off messages sent by his wireless thermostat to his boiler, and then re-transmitted those same messages to programatically control his central heating. I follow this same approach, but make use of a cheap USB TV tuner and &lt;a href=&quot;http://www.rtl-sdr.com/about-rtl-sdr/&quot;&gt;Software Defined Radio&lt;/a&gt; to capture the control signals, instead of a soundcard based logic analyser.&lt;/p&gt;
+
+&lt;p&gt;RTL-SDR is a project for building a Software Defined Radio using the RTL2832U chip found in most USB TV tuners. The &lt;a href=&quot;http://www.rtl-sdr.com/rtl-sdr-quick-start-guide/&quot;&gt;basic setup&lt;/a&gt; will set you back less than £10, and allows you view and record radio signals in the frequency range of 20 MHz to 1.7 GHz. This range includes AM/FM/DAB radio, digital TV, GSM channels used by mobile phones, and most importantly for this project, the un-licensed (at least in the UK) 433 MHz channel for short range devices such as central heating thermostats.&lt;/p&gt;
+
+&lt;h3&gt;Capturing the Messages&lt;/h3&gt;
+
+&lt;p&gt;Using &lt;a href=&quot;http://sdrsharp.com/#sdrsharp&quot;&gt;SDRSharp&lt;/a&gt;, I was able to set the listening frequency to 433 MHz and watch radio traffic stream in real-time. To check that I had tuned into the same frequency as that used by my thermostat, I turned up the temperature setting on the thermostat so that it would transmit an ON signal to the boiler. I noticed three spikes show up in SDRSharp in short succession, and similarly when forcing the corresponding OFF signal. To capture the data being sent, I futher tuned the frequency in SDRSharp to that at which I saw the spikes, and clicked record. &lt;/p&gt;
+
+&lt;h3&gt;Analysing the Messages&lt;/h3&gt;
+
+&lt;p&gt;I opend up the recorded waveforms in &lt;a href=&quot;http://audacityteam.org/&quot;&gt;Audacity&lt;/a&gt;, an audio editor that happens to work well for analysing radio signals. Here we can see three spikes, where the ON signal is repeated three times.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/on.jpg&quot; alt=&quot;Waveform&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Zooming in a bit closer, we can see that the radio signal is composed of on/off bursts of varying lengths. This is known as on-off keying, where a digital 1 bit is represented by a high signal of a given duration, and a 0 bit is represented by a high signal of a different duration. In this example, we can see two pulse lengths, one which is ~ 1000 microseconds long and the other ~ 500 microseconds, and the gap between bits is ~ 400 microseconds. If you think of the long pulse as representing a digital bit 1, and the short pulse representing the digital bit 0, then this signal represents the 31 bit binary string 0000001000100001000010000100000.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/close_up.jpg&quot; alt=&quot;Close-up&quot;&gt;&lt;/p&gt;
+
+&lt;h3&gt;Re-transmitting the messages&lt;/h3&gt;
+
+&lt;p&gt;To replicate the signal sent by my thermostat to the boiler, I attached a cheap 433 MHz radio transmitter (with a make-shift antenna) to my Arduino Nano, and had it send out pulses of the same duration as measured in Audacity.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/transmitter.jpg&quot; alt=&quot;Arduino Transmitter&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The standard Arduino &lt;code&gt;delay(x)&lt;/code&gt; method pauses the application for x milliseconds, which doesn&amp;#39;t quite give us enough resolution to reproduce the signal, as the durations we require are on the order of 100s of microseconds. Instead I use the &lt;code&gt;delayMicroseconds()&lt;/code&gt; method, which accurately pauses the application for a given number of microseconds. With constants defined for the durations of a 1 bit and a 0 bit pulse, as well as the gap between bits, the code for replicating the signal essentially consists of a sequence of calls to &lt;code&gt;sendOne()&lt;/code&gt; and &lt;code&gt;sendZero()&lt;/code&gt;, where &lt;code&gt;sendOne()&lt;/code&gt; is simply:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c--&quot; data-lang=&quot;c++&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sendOne&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;digitalWrite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TRANSMITTER_PIN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HIGH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;delayMicroseconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DATA_ONE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;digitalWrite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TRANSMITTER_PIN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;LOW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;delayMicroseconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GAP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The code did take a fair bit of tweaking however, with the main issue being that the gap between bits isn&amp;#39;t the same for the whole signal, but once I had accounted for that it worked!&lt;/p&gt;
+
+&lt;h3&gt;Next Steps&lt;/h3&gt;
+
+&lt;p&gt;Now that I can control my central-heating programatically, the next steps toward building this project into something useful will include adding a temperature probe, and building a web interface for monitoring and configuring it. I could port the code to the ESP8266 WiFi platform, and have that run the web server as well as send the control signals. I should then be able to track data such as how long it takes to heat the house, have it learn my schedule, and eventually make it fully autonomous.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Adding WiFi to Your Hardware Projects Using The ESP8266</title>
@@ -25,7 +73,7 @@
 
 &lt;p&gt;The module is essentially a System-on-a-Chip (SoC) that contains a 32-bit CPU clocked to 80 MHz, a WiFi transmitter/reciever, some internal RAM and ROM, plus an external flash memory chip. All in all it&amp;#39;s a pretty nifty little thing, and provides a really simple way of adding WiFi connectivity to your hardware projects.&lt;/p&gt;
 
-&lt;h2&gt;Wireless Serial Port&lt;/h2&gt;
+&lt;h3&gt;Wireless Serial Port&lt;/h3&gt;
 
 &lt;p&gt;The default firmware lets you treat the ESP8266 as a wireless serial port, ie - you can send data in the same way as you would print to a serial USB sconnection. Simply connect up the Tx and Rx ports of the ESP8266 to the Rx and Tx ports of your Arduino or similar device, and then tell it what to do by executing commands using &lt;code&gt;Serial.write(command)&lt;/code&gt;. The commands are pretty straightforward, you can reset the module, set it up as an access point, connect to an access point, send data to connected clients, etc. The full list is available &lt;a href=&quot;http://wiki.iteadstudio.com/ESP8266_Serial_WIFI_Module#AT_Commands&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
@@ -69,7 +117,7 @@
 
 &lt;p&gt;To play around with the AT commands, it&amp;#39;s worth getting a USB to Serial TTL converter, and running the commands directly from your computer using a serial port terminal such as &lt;a href=&quot;http://freeware.the-meiers.org/&quot;&gt;CoolTerm&lt;/a&gt;. For wiring everything up, I followed &lt;a href=&quot;http://www.esp8266.com/wiki/doku.php?id=getting-started-with-the-esp8266&quot;&gt;this tutorial&lt;/a&gt; from the ESP8266 community wiki.&lt;/p&gt;
 
-&lt;h2&gt;Self-Contained Application Platform&lt;/h2&gt;
+&lt;h3&gt;Self-Contained Application Platform&lt;/h3&gt;
 
 &lt;p&gt;The integrated processor is used for running the TCP/IP stack as well as all of the additional networking software, separating the low-level network implementation details from your application and hardware by providing an easy to use serial interface. &lt;/p&gt;
 
@@ -88,11 +136,9 @@
 
 &lt;p&gt;Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed &lt;a href=&quot;http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS&quot;&gt;this instructable&lt;/a&gt; for the most part, using the same temperature probe and LED display, but with much simplified code. &lt;/p&gt;
 
-&lt;p&gt;Here&amp;#39;s how I did it.&lt;/p&gt;
-
-&lt;h2&gt;Step 1: Components&lt;/h2&gt;
-
-&lt;p&gt;You&amp;#39;ll need the following:&lt;/p&gt;
+&lt;p&gt;Here&amp;#39;s how I did it.
+&lt;h3&gt;Step 1: Components&lt;/h3&gt;
+You&amp;#39;ll need the following:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;MAX7219 based LED display&lt;/li&gt;
@@ -107,7 +153,7 @@
 &lt;li&gt;Mains extension cable&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;Step 2: Wiring it together&lt;/h2&gt;
+&lt;h3&gt;Step 2: Wiring it together&lt;/h3&gt;
 
 &lt;p&gt;Tthe temperature sensore will sit in the cooker filled with hot water, which will be connected to the mains extension. Our circuit will control the mains extensions cable, turning the cooker on and off, forming a basic feedback loop.&lt;/p&gt;
 
@@ -119,14 +165,14 @@
 
 &lt;p&gt;To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable is brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.&lt;/p&gt;
 
-&lt;h2&gt;Step 3: Code&lt;/h2&gt;
+&lt;h3&gt;Step 3: Code&lt;/h3&gt;
 
 &lt;p&gt;My code is &lt;a href=&quot;https://github.com/treemantris/SimpleSousVide/blob/master/simpleSousVide.ino&quot;&gt;available on GitHub&lt;/a&gt;, you&amp;#39;ll need to install the following Arduino libraries for it to work:
 &lt;a href=&quot;https://github.com/wayoda/LedControl&quot;&gt;LedControl&lt;/a&gt;,
 &lt;a href=&quot;https://github.com/PaulStoffregen/OneWire&quot;&gt;OneWire&lt;/a&gt; and
 &lt;a href=&quot;https://github.com/milesburton/Arduino-Temperature-Control-Library&quot;&gt;DallasTemperature&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2&gt;Step 4: Safety and Testing&lt;/h2&gt;
+&lt;h3&gt;Step 4: Safety and Testing&lt;/h3&gt;
 
 &lt;p&gt;Once you&amp;#39;ve wired everything up and loaded up the code, it should be ready to test. When you power it up, you&amp;#39;ll see two numbers appear on the display. The first number is the desired temperature, which initially is 65°C, and the second number is the measured temperature. The push buttons are used to control the desired temperature in increments of 0.5°C. Initially, the relay will be active because room temperature will be less than 65°C. To test everything works, set the desired tempreature to lower than the current temperature, and you should hear a click as the relay turns off.&lt;/p&gt;
 
@@ -134,7 +180,7 @@
 
 &lt;p&gt;Because we are dealing with high voltages, it is important to keep the electronics away from the cooker so that they don&amp;#39;t get wet. I created a waterproof container by stacking two plastic take-away boxes, sandwiching the relay and exposed mains cables in the bottom compartment and the Arduino in the top, with holes cut between them for the wires. You might want to use some kind of water-tight sealant to be extra safe. I also used a battery pack to power the Arduino, connected directly to the 5V pin, which fits nicely inside the sealed box.&lt;/p&gt;
 
-&lt;h2&gt;Step 5: Get Coooking!&lt;/h2&gt;
+&lt;h3&gt;Step 5: Get Coooking!&lt;/h3&gt;
 
 &lt;p&gt;Now that your cooker is set up, it&amp;#39;s time to get cooking! So far I&amp;#39;ve tried &lt;a href=&quot;http://www.chefsteps.com/activities/sous-vide-steak&quot;&gt;steak&lt;/a&gt; and &lt;a href=&quot;http://www.chefsteps.com/activities/75-c-egg&quot;&gt;poached eggs&lt;/a&gt;, with varying results. One thing I&amp;#39;ve found to work well is to fill the cooker up with boiling water from a kettle and let it cool to the desired temperature, rather than filling it with cold water and waiting for it to heat up. It might take a few attempts before you get it right, but when you do it is well worth it.&lt;/p&gt;
 

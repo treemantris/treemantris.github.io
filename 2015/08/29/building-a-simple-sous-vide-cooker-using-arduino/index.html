@@ -88,6 +88,14 @@
           
         
       
+        
+          
+        
+      
+        
+          
+        
+      
 
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -110,11 +118,9 @@
 
 <p>Conventional Sous-Vide machines are expensive, typically costing at least £100 for a low-end model. With my trusty Arduino UNO, a cheap slow-cooker, and some basic electronic components, I was able to achieve something pretty similar for a fraction of the cost. I followed <a href="http://www.instructables.com/id/Cheap-and-effective-Sous-Vide-cooker-Arduino-power/?ALLSTEPS">this instructable</a> for the most part, using the same temperature probe and LED display, but with much simplified code. </p>
 
-<p>Here&#39;s how I did it.</p>
-
-<h2>Step 1: Components</h2>
-
-<p>You&#39;ll need the following:</p>
+<p>Here&#39;s how I did it.
+<h3>Step 1: Components</h3>
+You&#39;ll need the following:</p>
 
 <ul>
 <li>MAX7219 based LED display</li>
@@ -129,7 +135,7 @@
 <li>Mains extension cable</li>
 </ul>
 
-<h2>Step 2: Wiring it together</h2>
+<h3>Step 2: Wiring it together</h3>
 
 <p>Tthe temperature sensore will sit in the cooker filled with hot water, which will be connected to the mains extension. Our circuit will control the mains extensions cable, turning the cooker on and off, forming a basic feedback loop.</p>
 
@@ -141,14 +147,14 @@
 
 <p>To connect the relay to your mains extension cable, split it open using a craft knife and you should find three coloured wires - Earth, Neutral, and Live. The wire that we want attached to the relay is the Live cable, as this is the main line responsible for sending power to the cooker. The colour of this cable will vary depending on country, in the UK the live cable is brown. Cut this cable and strip each end, attaching one to the NO terminal of the relay, and the other to the COM terminal.</p>
 
-<h2>Step 3: Code</h2>
+<h3>Step 3: Code</h3>
 
 <p>My code is <a href="https://github.com/treemantris/SimpleSousVide/blob/master/simpleSousVide.ino">available on GitHub</a>, you&#39;ll need to install the following Arduino libraries for it to work:
 <a href="https://github.com/wayoda/LedControl">LedControl</a>,
 <a href="https://github.com/PaulStoffregen/OneWire">OneWire</a> and
 <a href="https://github.com/milesburton/Arduino-Temperature-Control-Library">DallasTemperature</a>.</p>
 
-<h2>Step 4: Safety and Testing</h2>
+<h3>Step 4: Safety and Testing</h3>
 
 <p>Once you&#39;ve wired everything up and loaded up the code, it should be ready to test. When you power it up, you&#39;ll see two numbers appear on the display. The first number is the desired temperature, which initially is 65°C, and the second number is the measured temperature. The push buttons are used to control the desired temperature in increments of 0.5°C. Initially, the relay will be active because room temperature will be less than 65°C. To test everything works, set the desired tempreature to lower than the current temperature, and you should hear a click as the relay turns off.</p>
 
@@ -156,7 +162,7 @@
 
 <p>Because we are dealing with high voltages, it is important to keep the electronics away from the cooker so that they don&#39;t get wet. I created a waterproof container by stacking two plastic take-away boxes, sandwiching the relay and exposed mains cables in the bottom compartment and the Arduino in the top, with holes cut between them for the wires. You might want to use some kind of water-tight sealant to be extra safe. I also used a battery pack to power the Arduino, connected directly to the 5V pin, which fits nicely inside the sealed box.</p>
 
-<h2>Step 5: Get Coooking!</h2>
+<h3>Step 5: Get Coooking!</h3>
 
 <p>Now that your cooker is set up, it&#39;s time to get cooking! So far I&#39;ve tried <a href="http://www.chefsteps.com/activities/sous-vide-steak">steak</a> and <a href="http://www.chefsteps.com/activities/75-c-egg">poached eggs</a>, with varying results. One thing I&#39;ve found to work well is to fill the cooker up with boiling water from a kettle and let it cool to the desired temperature, rather than filling it with cold water and waiting for it to heat up. It might take a few attempts before you get it right, but when you do it is well worth it.</p>
 
@@ -172,6 +178,15 @@
     
       <li>
         <h3>
+          <a href="/2015/09/13/nest-thermostat/">
+            Building a Nest Thermostat With Arduino Part 1 - Control
+            <small>13 Sep 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/09/09/adding-wifi-to-your-hardware-projects-esp8266/">
             Adding WiFi to Your Hardware Projects Using The ESP8266
             <small>09 Sep 2015</small>
@@ -184,15 +199,6 @@
           <a href="/2015/08/10/arduino-projects/">
             Arduino Projects
             <small>10 Aug 2015</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2015/08/08/hello-world/">
-            Hello World!
-            <small>08 Aug 2015</small>
           </a>
         </h3>
       </li>
