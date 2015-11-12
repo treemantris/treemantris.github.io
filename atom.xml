@@ -4,13 +4,71 @@
  <title>Tristan's Tech Blog</title>
  <link href="http://www.tristanpollitt.com/atom.xml" rel="self"/>
  <link href="http://www.tristanpollitt.com/"/>
- <updated>2015-09-20T17:15:55+01:00</updated>
+ <updated>2015-11-12T19:48:50+00:00</updated>
  <id>http://www.tristanpollitt.com</id>
  <author>
    <name>Tristan Pollitt</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Native Development for the ESP8266 Using Sming</title>
+   <link href="http://www.tristanpollitt.com/2015/11/12/native-esp8266-development-using-sming/"/>
+   <updated>2015-11-12T00:00:00+00:00</updated>
+   <id>http://www.tristanpollitt.com/2015/11/12/native-esp8266-development-using-sming</id>
+   <content type="html">&lt;p&gt;In previous posts, I&amp;#39;ve talked about &lt;a href=&quot;/2015/09/09/adding-wifi-to-your-hardware-projects-esp8266/&quot;&gt;using the ESP8266 module to add WiFi to hardware projects&lt;/a&gt;. The ESP8266 is a neat little chip, and recently I&amp;#39;ve spent some time learning how to write native programs for it, ie - code that runs directly on the ESP8266 itself without having to connect it to an Arduino.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve been using &lt;a href=&quot;https://github.com/SmingHub/Sming&quot;&gt;Sming&lt;/a&gt;, an open source framework built on top of the official &lt;a href=&quot;http://espressif.com/new-sdk-release/&quot;&gt;Espressif SDK&lt;/a&gt;. Sming makes writing native applications a breeze, and supports most existing Arduino libraries which means that you can connect and use almost any sensor/device that works with Arduino!&lt;/p&gt;
+
+&lt;p&gt;Although documentation is a bit sparse, I followed the &lt;a href=&quot;https://github.com/SmingHub/Sming/wiki/Windows-Quickstart&quot;&gt;Windows Quickstart&lt;/a&gt; for setting it up and had no problems at all. Where it lacks in documentation, it easily makes up in code examples, with dozens of example projects to get you started. The framework, and the applications you build with it, are written in C++. With my C++ being a bit rusty, I found the exmpales a great way to learn the API and brush up on areas of C++ that I am not overly familiar with (mostly templates).&lt;/p&gt;
+
+&lt;p&gt;To create a new project, I copied the folder for one of the example projects, renamed it and then imported it into Eclipse. After reading through example uses of the TcpServer class, and modifying the TcpClient example project a little, I was able to successfully write a simple echo-server, which accepts TCP connections on port 123, and sends back any data sent to it. The code is as follows:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c--&quot; data-lang=&quot;c++&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;user_config.h&amp;gt;
+#include &amp;lt;SmingCore/SmingCore.h&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#define WIFI_SSID &quot;MY_WIFI_SSID&quot;
+#define WIFI_PWD &quot;MY_WIFI_PASSWORD&quot;
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;TcpServer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myTcpServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onClientData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TcpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;connectedToWifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Connected!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ip&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WifiStation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;myTcpServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;connectFail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Connect failed, retrying&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;WifiStation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;waitConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connectedToWifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectFail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;115200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;myTcpServer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TcpServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;onClientData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;WifiAccessPoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;WifiStation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WIFI_SSID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WIFI_PWD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;WifiStation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;WifiStation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;waitConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connectedToWifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectFail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;It consists of four simple methods: &lt;code&gt;init()&lt;/code&gt; runs once after the device has started up, and initialises the connection to my local wifi network. &lt;code&gt;connectedToWifi()&lt;/code&gt; gets called when the WiFi connection is established, starts the TCP server listening on port 123, and prints out the IP address to the serial connection. &lt;code&gt;connectFail()&lt;/code&gt; gets called on failure to connect to the WiFi and attempts to re-connect. &lt;code&gt;onClientData()&lt;/code&gt; get calls when a connected client sends us data over the TCP socket which we send directly back to the conected client.&lt;/p&gt;
+
+&lt;p&gt;Getting the code onto the device itself is a bit fiddly, you&amp;#39;ll need a USB to TTL adapter, and then it&amp;#39;s just a matter of &lt;a href=&quot;http://www.esp8266.com/wiki/doku.php?id=getting-started-with-the-esp8266&quot;&gt;wiring everything up&lt;/a&gt; and flashing it. To flash code onto the ESP8266 you&amp;#39;ll need to either run &lt;code&gt;make flash&lt;/code&gt; from the command line or select the flash option from the Make Targets menu in Eclipse.&lt;/p&gt;
+
+&lt;p&gt;With the basics sorted, it should be easy enough to port some of my existing Arduino projects to native ESP8266. Doing so for the sous-vide project would be really cool, as it would open up the possiblity of controlling it from a smartphone via WiFi. I&amp;#39;m also looking into clustering several ESP8266 to see if I can implement some interesting distributed algorithms, more on that soon.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Building a Nest Thermostat With Arduino Part 1 - Control</title>
