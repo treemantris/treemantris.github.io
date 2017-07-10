@@ -22451,33 +22451,79 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ResultComponent = function (_React$Component) {
 	_inherits(ResultComponent, _React$Component);
 
-	function ResultComponent() {
+	function ResultComponent(props) {
 		_classCallCheck(this, ResultComponent);
 
-		return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).call(this, props));
+
+		_this.state = { remainingText: 'remaining' };
+		return _this;
 	}
 
 	_createClass(ResultComponent, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			var currentTime = new Date();
+			this.currentTimeInSeconds = currentTime.getHours() * 3600 + currentTime.getMinutes() * 60 + currentTime.getSeconds();
+
+			var estimatedTime = this.props.estimated.split(":");
+			if (estimatedTime.length != 2) estimatedTime = this.props.scheduled.split(":");
+
+			var estimatedHours = parseInt(estimatedTime[0]);
+			var estimatedMinutes = parseInt(estimatedTime[1]);
+
+			this.estimatedTimeInSeconds = estimatedHours * 3600 + estimatedMinutes * 60;
+
+			this.timerID = setInterval(function () {
+				return _this2.tick();
+			}, 1000);
+			this.tick();
+		}
+	}, {
+		key: 'tick',
+		value: function tick() {
+			var negative = this.estimatedTimeInSeconds < this.currentTimeInSeconds;
+			var remaining = this.estimatedTimeInSeconds - this.currentTimeInSeconds;
+			var absRemaining = Math.abs(remaining);
+
+			var remainingMinutes = Math.floor(absRemaining / 60);
+			var remainingSeconds = absRemaining % 60;
+
+			var remainingText = 'in ' + (negative ? '-' : '') + remainingMinutes.toString() + ':' + remainingSeconds.toString() + ' minutes';
+
+			this.setState({ remainingMinutes: remainingMinutes, remainingSeconds: remainingSeconds, remainingText: remainingText });
+			this.currentTimeInSeconds += 1;
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			clearInterval(this.timerID);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var platformText = 'Platform: ' + this.props.platform;
-			var timeText = '\nScheduled Time: ' + this.props.scheduled;
-			var timeText2 = '\nExpected: ' + this.props.estimated;
+			var timeText = 'Scheduled Time: ' + this.props.scheduled;
+			var timeText2 = 'Expected: ' + this.props.estimated;
 			return _react2.default.createElement(
 				'div',
 				null,
 				_react2.default.createElement(
-					'div',
+					'h1',
 					null,
-					platformText
+					platformText,
+					' ',
+					this.state.remainingText
 				),
 				_react2.default.createElement(
-					'div',
+					'h2',
 					null,
 					timeText
 				),
 				_react2.default.createElement(
-					'div',
+					'h2',
 					null,
 					timeText2
 				)
@@ -22502,11 +22548,15 @@ var App = function (_React$Component2) {
 		value: function render() {
 			var results = this.props.results;
 			var components = results.map(function (r, i) {
-				return _react2.default.createElement(ResultComponent, _extends({ key: i }, r));
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(ResultComponent, _extends({ key: i }, r))
+				);
 			});
 			return _react2.default.createElement(
 				_reactSwipe2.default,
-				{ className: 'carousel', swipeOptions: { continuous: true } },
+				{ className: 'carousel', swipeOptions: {} },
 				components
 			);
 		}
