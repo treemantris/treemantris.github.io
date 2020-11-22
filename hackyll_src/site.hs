@@ -5,11 +5,8 @@ import           Hakyll
 
 
 --------------------------------------------------------------------------------
-config :: Configuration
-config = defaultConfiguration
-  { destinationDirectory = "../" }
 main :: IO ()
-main = hakyllWith config $ do
+main = hakyll $ do
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
